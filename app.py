@@ -8,6 +8,7 @@ from seprate import split_excel_by_industry
 from cleaner import EmailListCleaner
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-change-this-in-production'
 
 # For Vercel, use /tmp for temporary files
 UPLOAD_FOLDER = '/tmp' if os.environ.get('VERCEL') else tempfile.mkdtemp()
@@ -128,8 +129,44 @@ def split_industry():
             return redirect(url_for('index'))
 
         try:
-            split_excel_by_industry(filepath, industry_column, output_format)
-            flash('File split successfully. Check the industry_split_output folder.')
+            # Create output filename
+            base_name = os.path.splitext(filename)[0]
+            if output_format == 'single_file_multiple_sheets':
+                output_filename = f'{base_name}_split_by_{industry_column}.xlsx'
+                output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+
+                # Modify the split function to save to our temp folder instead of industry_split_output
+                split_excel_by_industry(filepath, industry_column, output_format, output_filepath, verbose=False)
+                flash('File split successfully into multiple sheets.')
+                return redirect(url_for('download_file', filename=output_filename))
+            else:
+                # For separate files, create a zip archive
+                import zipfile
+                zip_filename = f'{base_name}_split_by_{industry_column}.zip'
+                zip_filepath = os.path.join(app.config['UPLOAD_FOLDER'], zip_filename)
+
+                # Create a temporary directory for split files
+                temp_split_dir = os.path.join(app.config['UPLOAD_FOLDER'], f'temp_split_{base_name}')
+                os.makedirs(temp_split_dir, exist_ok=True)
+
+                # Split files into temp directory
+                split_excel_by_industry(filepath, industry_column, output_format, temp_split_dir, verbose=False)
+
+                # Create zip file
+                with zipfile.ZipFile(zip_filepath, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                    for root, dirs, files in os.walk(temp_split_dir):
+                        for file in files:
+                            file_path = os.path.join(root, file)
+                            arcname = os.path.relpath(file_path, temp_split_dir)
+                            zipf.write(file_path, arcname)
+
+                # Clean up temp directory
+                import shutil
+                shutil.rmtree(temp_split_dir)
+
+                flash('File split successfully into separate files (ZIP archive).')
+                return redirect(url_for('download_file', filename=zip_filename))
+
         except Exception as e:
             flash(f'Error splitting file: {str(e)}')
     return redirect(url_for('index'))

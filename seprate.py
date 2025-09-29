@@ -2,104 +2,136 @@ import pandas as pd
 import os
 from pathlib import Path
 
-def split_excel_by_industry(file_path, industry_column_name=None, output_format='separate_files'):
+def split_excel_by_industry(file_path, industry_column_name=None, output_format='separate_files', output_path=None, verbose=True):
     """
     Split Excel file by industry into separate files or sheets
-    
+
     Parameters:
     file_path (str): Path to your Excel file
     industry_column_name (str): Name of the column containing industry data
     output_format (str): 'separate_files' or 'single_file_multiple_sheets'
+    output_path (str): Custom output path (file path for single file, directory for separate files)
+    verbose (bool): Whether to print progress messages
     """
-    
+
     try:
         # Read the Excel file
-        print("Reading Excel file...")
+        if verbose:
+            print("Reading Excel file...")
         df = pd.read_excel(file_path)
-        print(f"Successfully loaded {len(df)} rows and {len(df.columns)} columns")
-        
+        if verbose:
+            print(f"Successfully loaded {len(df)} rows and {len(df.columns)} columns")
+
         # Display column names to help identify industry column
-        print("\nColumn names in your file:")
-        for i, col in enumerate(df.columns):
-            print(f"{i+1}. {col}")
-        
+        if verbose:
+            print("\nColumn names in your file:")
+            for i, col in enumerate(df.columns):
+                print(f"{i+1}. {col}")
+
         # If industry column not specified, try to auto-detect
         if industry_column_name is None:
             # Look for columns that might contain industry data
-            potential_columns = [col for col in df.columns 
-                               if any(keyword in col.lower() 
+            potential_columns = [col for col in df.columns
+                               if any(keyword in col.lower()
                                      for keyword in ['industry', 'sector', 'business', 'category', 'type'])]
-            
+
             if potential_columns:
                 industry_column_name = potential_columns[0]
-                print(f"\nAuto-detected industry column: '{industry_column_name}'")
+                if verbose:
+                    print(f"\nAuto-detected industry column: '{industry_column_name}'")
             else:
-                print("\nPlease specify the industry column name manually")
+                if verbose:
+                    print("\nPlease specify the industry column name manually")
                 return
-        
+
         # Verify the column exists
         if industry_column_name not in df.columns:
-            print(f"Error: Column '{industry_column_name}' not found in the file")
+            if verbose:
+                print(f"Error: Column '{industry_column_name}' not found in the file")
             return
-        
+
         # Get unique industries
         industries = df[industry_column_name].dropna().unique()
-        print(f"\nFound {len(industries)} unique industries:")
-        for industry in sorted(industries):
-            count = len(df[df[industry_column_name] == industry])
-            print(f"  - {industry}: {count} records")
+        if verbose:
+            print(f"\nFound {len(industries)} unique industries:")
+            for industry in sorted(industries):
+                count = len(df[df[industry_column_name] == industry])
+                print(f"  - {industry}: {count} records")
         
-        # Create output directory
-        output_dir = Path("industry_split_output")
-        output_dir.mkdir(exist_ok=True)
-        
+        # Determine output location
+        if output_path:
+            if output_format == 'separate_files':
+                output_dir = Path(output_path)
+                output_dir.mkdir(exist_ok=True)
+            else:  # single_file_multiple_sheets
+                output_dir = Path(output_path).parent
+                output_dir.mkdir(exist_ok=True)
+        else:
+            output_dir = Path("industry_split_output")
+            output_dir.mkdir(exist_ok=True)
+
         if output_format == 'separate_files':
             # Create separate Excel files for each industry
-            print("\nCreating separate files for each industry...")
-            
+            if verbose:
+                print("\nCreating separate files for each industry...")
+
             for industry in industries:
                 # Filter data for this industry
                 industry_data = df[df[industry_column_name] == industry]
-                
+
                 # Create safe filename
                 safe_filename = "".join(c for c in str(industry) if c.isalnum() or c in (' ', '-', '_')).strip()
                 safe_filename = safe_filename.replace(' ', '_')
-                output_file = output_dir / f"{safe_filename}.xlsx"
-                
+                if output_path:
+                    output_file = Path(output_path) / f"{safe_filename}.xlsx"
+                else:
+                    output_file = output_dir / f"{safe_filename}.xlsx"
+
                 # Save to Excel
                 industry_data.to_excel(output_file, index=False)
-                print(f"  ✓ Created: {output_file} ({len(industry_data)} rows)")
-        
+                if verbose:
+                    print(f"  ✓ Created: {output_file} ({len(industry_data)} rows)")
+
         elif output_format == 'single_file_multiple_sheets':
             # Create single Excel file with multiple sheets
-            output_file = output_dir / "all_industries_by_sheet.xlsx"
-            print(f"\nCreating single file with multiple sheets: {output_file}")
-            
+            if output_path:
+                output_file = Path(output_path)
+            else:
+                output_file = output_dir / "all_industries_by_sheet.xlsx"
+            if verbose:
+                print(f"\nCreating single file with multiple sheets: {output_file}")
+
             with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
                 for industry in industries:
                     # Filter data for this industry
                     industry_data = df[df[industry_column_name] == industry]
-                    
+
                     # Create safe sheet name (Excel sheet names have limitations)
                     safe_sheet_name = str(industry)[:31]  # Excel sheet name limit
                     safe_sheet_name = "".join(c for c in safe_sheet_name if c.isalnum() or c in (' ', '-', '_'))
-                    
+
                     # Write to sheet
                     industry_data.to_excel(writer, sheet_name=safe_sheet_name, index=False)
-                    print(f"  ✓ Created sheet: {safe_sheet_name} ({len(industry_data)} rows)")
-        
-        print(f"\n✅ Successfully split the data! Output saved in: {output_dir}")
-        
+                    if verbose:
+                        print(f"  ✓ Created sheet: {safe_sheet_name} ({len(industry_data)} rows)")
+
+        output_location = output_path if output_path else str(output_dir)
+        if verbose:
+            print(f"\n✅ Successfully split the data! Output saved in: {output_location}")
+
         # Summary statistics
         total_processed = sum(len(df[df[industry_column_name] == industry]) for industry in industries)
-        print(f"\nSummary:")
-        print(f"  - Original rows: {len(df)}")
-        print(f"  - Processed rows: {total_processed}")
-        print(f"  - Industries: {len(industries)}")
-        
+        if verbose:
+            print(f"\nSummary:")
+            print(f"  - Original rows: {len(df)}")
+            print(f"  - Processed rows: {total_processed}")
+            print(f"  - Industries: {len(industries)}")
+
     except Exception as e:
-        print(f"Error: {str(e)}")
-        print("Please check your file path and ensure the Excel file is not open in another program")
+        if verbose:
+            print(f"Error: {str(e)}")
+            print("Please check your file path and ensure the Excel file is not open in another program")
+        raise  # Re-raise the exception for the web app to handle
 
 # Example usage functions
 def quick_split_separate_files(file_path, industry_column_name):
