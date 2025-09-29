@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>List Refiner  Clean & Combine Email Lists</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root{
+      --brand:#0b4a63;           /* primary */
+      --brand-2:#0072ce;         /* accent */
+      --ink:#1f2937;             /* body text */
+      --muted:#6b7280;           /* secondary text */
+      --bg:#f7fafc;              /* page bg */
+      --card:#ffffff;            /* cards */
+      --line:#e5e7eb;            /* borders */
+      --focus:#ffb54b;           /* focus ring */
+      --success:#10b981;
+    }
+
+    /* Base */
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--brand-2);text-decoration:none}
+    a:hover{text-decoration:underline}
+    h1,h2,h3{color:#003366;margin:0 0 .5rem}
+    p{margin:.5rem 0}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+    /* Header */
+    .site-header{
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      position:sticky;top:0;z-index:20;
+    }
+    .brand-row{display:flex;align-items:center;gap:14px;padding:14px 0}
+    .brand-logo{height:40px;width:auto}
+    .brand-name{font-weight:700;font-size:1.1rem;color:#0b2530;letter-spacing:.2px}
+    .brand-tag{font-size:.85rem;color:var(--muted)}
+
+    /* Hero */
+    .hero{
+      background:linear-gradient(180deg,#ffffff 0%, #f3f8fc 100%);
+      border-bottom:1px solid var(--line);
+    }
+    .hero-inner{
+      display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;
+      padding:40px 0;
+    }
+    .eyebrow{color:var(--brand-2);font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+    .hero h1{font-size:clamp(1.6rem, 2.4vw, 2.2rem);line-height:1.2;color:#003366;margin:.25rem 0 .75rem}
+    .sub{font-size:1.05rem;color:var(--muted);max-width:48ch}
+    .hero-card{
+      background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;
+      box-shadow:0 6px 24px rgba(0,0,0,.06)
+    }
+    .hero-art{
+      border-radius:12px;border:1px solid var(--line);
+      box-shadow:0 8px 22px rgba(0,0,0,.06)
+    }
+
+    /* Features */
+    .features{padding:34px 0}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feature{
+      background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;
+    }
+    .feature h3{font-size:1.05rem;margin-bottom:.35rem}
+    .kicker{display:inline-block;background:#e6f0ff;color:#003366;border-radius:999px;padding:.25rem .6rem;font-size:.78rem;font-weight:700;margin-bottom:10px}
+
+    /* How it Works */
+    .steps{padding:8px 0 26px}
+    .step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+    .step-num{
+      width:32px;height:32px;border-radius:50%;
+      background:#003366;color:#fff;display:flex;align-items:center;justify-content:center;
+      font-weight:700;margin-bottom:10px
+    }
+
+    /* Uploader card */
+    .uploader{
+      padding:28px 0 36px
+    }
+    .card{
+      background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+      max-width:720px;margin:0 auto;
+    }
+    .upload-wrap{display:grid;grid-template-columns:1fr;gap:18px}
+    .dropzone{
+      border:2px dashed #bcd2e5;border-radius:12px;background:#f8fbff;
+      padding:22px;text-align:center;transition:all .2s ease-in-out
+    }
+    .dropzone.dragover{background:#eef6ff;border-color:#7fb7f0}
+    .dropzone strong{color:#003366}
+    .input-row{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center
+    }
+    input[type="file"]{
+      padding:10px;background:#fff;border:1px solid var(--line);border-radius:8px;max-width:360px;width:100%;
+    }
+    input[type="submit"]{
+      background-color:#B8773A;color:#fff;border:none;padding:12px 18px;border-radius:8px;
+      cursor:pointer;font-size:1rem;font-weight:700;letter-spacing:.2px;
+      box-shadow:0 6px 16px rgba(184,119,58,.25);
+    }
+    input[type="submit"]:hover{filter:brightness(.97)}
+    input[type="submit"]:focus{outline:3px solid var(--focus);outline-offset:2px}
+
+    .hint{font-size:.9rem;color:var(--muted)}
+    .note{font-size:.85rem;color:#374151;background:#f9fafb;border:1px dashed #d1d5db;border-radius:10px;padding:10px;margin-top:10px}
+
+    /* Results (placeholder table styling) */
+    table{border-collapse:collapse;width:100%;margin-top:16px}
+    table,th,td{border:1px solid #e5e7eb}
+    th,td{padding:10px;text-align:left}
+    th{background:#e6f0ff;color:#003366}
+
+    /* FAQ */
+    .faq{padding:10px 0 40px}
+    details{
+      background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:8px 0
+    }
+    summary{cursor:pointer;font-weight:700}
+    summary:focus{outline:3px solid var(--focus);outline-offset:4px}
+
+    /* Footer */
+    .site-footer{
+      border-top:1px solid var(--line);background:#fff;color:var(--muted);font-size:.9rem
+    }
+    .foot-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 0}
+    .foot-links a{color:var(--muted);margin-right:12px}
+    .foot-links a:hover{color:#003366}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .hero-inner{grid-template-columns:1fr;gap:16px}
+      .feature-grid,.step-grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:620px){
+      .feature-grid,.step-grid{grid-template-columns:1fr}
+      .brand-tag{display:block}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="brand-row" role="banner" aria-label="List Refiner">
+        <img src="https://pricing.reachengine.io/images/transaction/n-logo.png"
+             alt="ReachEngine" class="brand-logo">
+        <div>
+          <div class="brand-name">List Refiner</div>
+          <div class="brand-tag">Clean &amp; combine email lists from Excel  in seconds</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div>
+        <div class="hero-card">
+          <div class="eyebrow">Email List Refiner</div>
+          <h1>Combine all sheets, remove duplicates, and export a clean list</h1>
+          <p class="sub">
+            Upload a single <strong>.xlsx</strong> workbook with multiple sheets. We’ll merge them,
+            dedupe by your email column, and return a refined list you can drop straight into your ESP.
+          </p>
+          <p class="note">
+            Server endpoint is <code>/upload</code>. This page provides the front-end UI; your backend should
+            accept the file, process it, and return a download URL (e.g., a CSV).
+          </p>
+        </div>
+      </div>
+      <div>
+        <img class="hero-art" src="https://pro.reachengine.io/frontend/assets/files/customer/fe894l5mtydbd/hero-image-1.png"
+             alt="Spreadsheet refinement illustration">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <span class="kicker">Why teams use List Refiner</span>
+      <div class="feature-grid">
+        <div class="feature">
+          <h3>All Sheets, One Click</h3>
+          <p>Automatically combines every sheet in your workbook—no manual copy/paste.</p>
+        </div>
+        <div class="feature">
+          <h3>Smart De-dupe</h3>
+          <p>Removes duplicates by email (case-insensitive) and trims whitespace &amp; invalid rows.</p>
+        </div>
+        <div class="feature">
+          <h3>Clean Output</h3>
+          <p>Exports a tidy CSV or XLSX you can import into Mailchimp, HubSpot, Klaviyo, or your ESP.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="steps">
+    <div class="container">
+      <span class="kicker">How it works</span>
+      <div class="step-grid">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Upload your workbook</h3>
+          <p>Select an <strong>.xlsx</strong> file containing any number of sheets.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>We combine &amp; clean</h3>
+          <p>All rows are stacked, invalid emails removed, and duplicates are de-duplicated.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Download refined list</h3>
+          <p>Get a single, ready-to-use list to import into your marketing tools.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <section style="padding: 20px 0; background: #fff3cd; border-bottom: 1px solid #ffeaa7;">
+        <div class="container">
+          {% for message in messages %}
+            <p style="color: #856404; margin: 0; font-weight: 500;">{{ message }}</p>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Tools Section -->
+  <section class="tools" style="padding: 40px 0; background: #f8fafc;">
+    <div class="container">
+      <span class="kicker">Available Tools</span>
+      <div class="tools-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+        <div class="tool-card" style="background: white; border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+          <h3 style="color: #003366; margin-top: 0;">📊 Excel Combiner & Deduper</h3>
+          <p><strong>What it does:</strong> Combines multiple sheets in an Excel file and removes duplicate emails.</p>
+          <p><strong>Why use it:</strong> Perfect for consolidating contact lists from multiple sources into one clean, deduplicated list.</p>
+          <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx" required style="margin-bottom: 10px;">
+            <input type="submit" value="Combine & Dedupe" style="background: #B8773A;">
+          </form>
+        </div>
+
+        <div class="tool-card" style="background: white; border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+          <h3 style="color: #003366; margin-top: 0;">🔗 Email Name Merger</h3>
+          <p><strong>What it does:</strong> Merges Emails from a source sheet to a target sheet where emails match.</p>
+          <p><strong>Why use it:</strong> Enrich your contact data by combining information from different lists using email as the key.</p>
+          <form action="/merge_names" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx" required style="margin-bottom: 10px;">
+            <input type="text" name="source_sheet" placeholder="Source sheet name" required style="margin-bottom: 10px; padding: 8px; width: 100%; border: 1px solid var(--line); border-radius: 6px;">
+            <input type="text" name="target_sheet" placeholder="Target sheet name" required style="margin-bottom: 10px; padding: 8px; width: 100%; border: 1px solid var(--line); border-radius: 6px;">
+            <input type="submit" value="Merge Names" style="background: #B8773A;">
+          </form>
+        </div>
+
+        <div class="tool-card" style="background: white; border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+          <h3 style="color: #003366; margin-top: 0;">🏭 Industry Splitter</h3>
+          <p><strong>What it does:</strong> Splits Excel files by industry or any category column into separate files or sheets.</p>
+          <p><strong>Why use it:</strong> Segment large datasets by categories for targeted marketing campaigns or analysis.</p>
+          <form action="/split_industry" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx" required style="margin-bottom: 10px;">
+            <input type="text" name="industry_column" placeholder="Column name (e.g., Industry)" required style="margin-bottom: 10px; padding: 8px; width: 100%; border: 1px solid var(--line); border-radius: 6px;">
+            <select name="output_format" style="margin-bottom: 10px; padding: 8px; width: 100%; border: 1px solid var(--line); border-radius: 6px;">
+              <option value="separate_files">Separate Files</option>
+              <option value="single_file_multiple_sheets">Single File (Multiple Sheets)</option>
+            </select>
+            <input type="submit" value="Split by Industry" style="background: #B8773A;">
+          </form>
+        </div>
+
+        <div class="tool-card" style="background: white; border: 1px solid var(--line); border-radius: 12px; padding: 20px;">
+          <h3 style="color: #003366; margin-top: 0;">🧹 Email Cleaner</h3>
+          <p><strong>What it does:</strong> Removes duplicates, invalid formats, disposable emails, and role-based emails from your list.</p>
+          <p><strong>Why use it:</strong> Improve email deliverability and list quality by removing problematic addresses.</p>
+          <form action="/clean_emails" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx,.xls,.csv" required style="margin-bottom: 10px;">
+            <input type="text" name="email_column" placeholder="Email column name" value="email" required style="margin-bottom: 10px; padding: 8px; width: 100%; border: 1px solid var(--line); border-radius: 6px;">
+            <label style="display: flex; align-items: center; margin-bottom: 10px;">
+              <input type="checkbox" name="advanced" style="margin-right: 8px;"> Enable DNS validation (slower but thorough)
+            </label>
+            <input type="submit" value="Clean Emails" style="background: #B8773A;">
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <span class="kicker">FAQ</span>
+      <details>
+        <summary>Which column is used for de-duplication?</summary>
+        <p>By default use the column containing emails (case-insensitive, trims whitespace). If multiple email columns exist, pick the first non-empty.</p>
+      </details>
+      <details>
+        <summary>What file types are supported?</summary>
+        <p>Currently <strong>.xlsx</strong>. Convert CSV/Google Sheets to .xlsx before uploading.</p>
+      </details>
+      <details>
+        <summary>Is the upload secure?</summary>
+        <p>Implement HTTPS on your server and delete processed files after generating the refined download.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container foot-row">
+      <div>© <span id="year"></span> List Refiner by ReachEngine</div>
+      <div class="foot-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightweight UX script (optional, no external deps) -->
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Drag & drop helper (front-end only)
+    const dz = document.getElementById('dropzone');
+    const input = document.getElementById('fileInput');
+    const form = document.getElementById('uploadForm');
+
+    ['dragenter','dragover'].forEach(evt => {
+      dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(evt => {
+      dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('dragover'); });
+    });
+    dz.addEventListener('drop', e => {
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) {
+        input.files = e.dataTransfer.files;
+        dz.innerHTML = '<strong>Selected:</strong> ' + file.name;
+      }
+    });
+
+    // Small UX touch: reflect chosen file
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if (file) dz.innerHTML = '<strong>Selected:</strong> ' + file.name;
+    });
+
+    // Basic client-side validation (keeps your backend logic unchanged)
+    form.addEventListener('submit', (e) => {
+      if (!input.files.length || !/\.xlsx$/i.test(input.files[0].name)) {
+        e.preventDefault();
+        alert('Please select a valid .xlsx file.');
+      }
+    });
+  </script>
+</body>
+</html>
