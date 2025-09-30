@@ -56,7 +56,6 @@ def upload_file():
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        # Process the file
         output_filename = 'refined_' + filename
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
         try:
@@ -71,13 +70,10 @@ def upload_file():
 def download_file(filename):
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if os.path.exists(filepath):
-        response = send_file(filepath, as_attachment=True)
-        # Optionally delete after download, but for simplicity, leave it
-        return response
+        return send_file(filepath, as_attachment=True)
     return "File not found"
 
 def process_excel(input_file, output_file):
-    # Adapted from combine_excel.py
     sheets = pd.read_excel(input_file, sheet_name=None)
     combined = pd.concat(sheets.values(), ignore_index=True)
     possible_email_cols = ['email', 'Email', 'email address', 'Email Address', 'e-mail', 'E-mail']
@@ -105,21 +101,15 @@ def merge_names():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Get parameters
         source_sheet = request.form.get('source_sheet', 'Sheet1')
         target_sheet = request.form.get('target_sheet', 'Sheet2')
         output_filename = 'merged_' + filename
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
 
         try:
-            # Read sheets
             source_list = read_list_from_excel(filepath, source_sheet)
             target_list = read_list_from_excel(filepath, target_sheet)
-
-            # Merge
             merged_list, matches = merge_by_email(source_list, target_list)
-
-            # Write output
             success = write_list_to_excel(merged_list, output_filepath)
             if success:
                 flash(f'Successfully merged {matches} records')
@@ -144,7 +134,6 @@ def split_industry():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Get parameters
         industry_column = request.form.get('industry_column')
         output_format = request.form.get('output_format', 'separate_files')
 
@@ -153,44 +142,29 @@ def split_industry():
             return redirect(url_for('index'))
 
         try:
-            # Create output filename
             base_name = os.path.splitext(filename)[0]
             if output_format == 'single_file_multiple_sheets':
                 output_filename = f'{base_name}_split_by_{industry_column}.xlsx'
                 output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
-
-                # Modify the split function to save to our temp folder instead of industry_split_output
                 split_excel_by_industry(filepath, industry_column, output_format, output_filepath, verbose=False)
                 flash('File split successfully into multiple sheets.')
                 return redirect(url_for('download_file', filename=output_filename))
             else:
-                # For separate files, create a zip archive
-                import zipfile
+                import zipfile, shutil
                 zip_filename = f'{base_name}_split_by_{industry_column}.zip'
                 zip_filepath = os.path.join(app.config['UPLOAD_FOLDER'], zip_filename)
-
-                # Create a temporary directory for split files
                 temp_split_dir = os.path.join(app.config['UPLOAD_FOLDER'], f'temp_split_{base_name}')
                 os.makedirs(temp_split_dir, exist_ok=True)
-
-                # Split files into temp directory
                 split_excel_by_industry(filepath, industry_column, output_format, temp_split_dir, verbose=False)
-
-                # Create zip file
                 with zipfile.ZipFile(zip_filepath, 'w', zipfile.ZIP_DEFLATED) as zipf:
-                    for root, dirs, files in os.walk(temp_split_dir):
+                    for root, _, files in os.walk(temp_split_dir):
                         for file in files:
                             file_path = os.path.join(root, file)
                             arcname = os.path.relpath(file_path, temp_split_dir)
                             zipf.write(file_path, arcname)
-
-                # Clean up temp directory
-                import shutil
                 shutil.rmtree(temp_split_dir)
-
                 flash('File split successfully into separate files (ZIP archive).')
                 return redirect(url_for('download_file', filename=zip_filename))
-
         except Exception as e:
             flash(f'Error splitting file: {str(e)}')
     return redirect(url_for('index'))
@@ -205,18 +179,14 @@ def clean_emails():
         flash('No file selected')
         return redirect(url_for('index'))
 
-    # Allow CSV and Excel for cleaner
     allowed_exts = {'xlsx', 'xls', 'csv'}
     if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_exts:
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Get parameters
         email_column = request.form.get('email_column', 'email')
         advanced = request.form.get('advanced') == 'on'
-
-        # Generate output filename
         input_path = os.path.splitext(filename)
         output_filename = f"{input_path[0]}_cleaned{input_path[1]}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
@@ -234,7 +204,3 @@ def clean_emails():
     else:
         flash('Invalid file format. Use CSV or Excel.')
     return redirect(url_for('index'))
-
-# For Vercel deployment
-if __name__ == '__main__':
-    app.run(debug=True)
