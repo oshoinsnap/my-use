@@ -88,11 +88,9 @@ The application is configured for Vercel with:
 ## File Structure
 
 ```
-email-tools/
-├── api/
-│   └── index.py          # Vercel serverless entry point
+email-tools/         # Vercel serverless entry point
 ├── templates/
-│   └── index.html        # Main web interface
+│   └── index.html (rest all)       # Main web interface
 ├── app.py                # Flask application
 ├── vercel.json          # Vercel deployment configuration
 ├── requirements.txt     # Python dependencies
@@ -130,3 +128,4 @@ For large files or heavy processing, consider running locally or using a VPS dep
 ## License
 
 This project is open source. Please check the license file for details.
+
