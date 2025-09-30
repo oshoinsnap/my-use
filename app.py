@@ -7,7 +7,7 @@ from email_name_merger import merge_by_email, read_list_from_excel, write_list_t
 from seprate import split_excel_by_industry
 from cleaner import EmailListCleaner
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.secret_key = 'your-secret-key-change-this-in-production'
 
 # For Vercel, use /tmp for temporary files
@@ -19,9 +19,29 @@ ALLOWED_EXTENSIONS = {'xlsx'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/')
+@app.route('/index.html')
 def index():
     return render_template('index.html')
+
+@app.route('/')
+def root_redirect():
+    return redirect(url_for('index'))
+
+@app.route('/combiner.html')
+def combiner():
+    return render_template('combiner.html')
+
+@app.route('/merger.html')
+def merger():
+    return render_template('merger.html')
+
+@app.route('/splitter.html')
+def splitter():
+    return render_template('splitter.html')
+
+@app.route('/cleaner.html')
+def cleaner():
+    return render_template('cleaner.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -39,8 +59,12 @@ def upload_file():
         # Process the file
         output_filename = 'refined_' + filename
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
-        process_excel(filepath, output_filepath)
-        return redirect(url_for('download_file', filename=output_filename))
+        try:
+            process_excel(filepath, output_filepath)
+            return redirect(url_for('download_file', filename=output_filename))
+        except Exception as e:
+            flash(f'Error processing file: {str(e)}')
+            return redirect(url_for('index'))
     return redirect(url_for('index'))
 
 @app.route('/download/<filename>')
