@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>List Refiner — Clean & Combine Email Lists</title>
+  <title>Excel Combiner & Deduper - List Refiner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -33,8 +33,6 @@
     a:hover{text-decoration:underline}
     h1,h2,h3{color:#003366;margin:0 0 .5rem}
     p{margin:.5rem 0}
-
-    /* Shared container — hero and header align the same */
     .container{max-width:1100px;margin:0 auto;padding:0 20px}
 
     /* Header */
@@ -43,27 +41,10 @@
       border-bottom:1px solid var(--line);
       position:sticky;top:0;z-index:20;
     }
-    /* Make sure header aligns exactly like hero: hard-left within .container (20px from viewport) */
-    .site-header .container{padding-left:20px;padding-right:20px}
-    .brand-row{
-      display:flex;align-items:center;gap:14px;padding:14px 0;
-      position:relative; /* for the absolute dropdown */
-      justify-content:flex-start; /* keep content to the left */
-    }
+    .brand-row{display:flex;align-items:center;gap:14px;padding:14px 0}
     .brand-logo{height:40px;width:auto}
     .brand-name{font-weight:700;font-size:1.1rem;color:#0b2530;letter-spacing:.2px}
     .brand-tag{font-size:.85rem;color:var(--muted)}
-    #hamburgerBtn{
-      background:none;border:none;cursor:pointer;padding:0;margin-right:16px;
-      display:inline-flex;align-items:center;justify-content:center
-    }
-    #menu{
-      display:none; position:absolute; top:56px; left:0;  /* aligns under the left edge of header content */
-      background:#fff; border:1px solid var(--line); border-radius:8px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:30; min-width:200px;
-    }
-    #menu ul{list-style:none;margin:0;padding:8px 0}
-    #menu a{display:block;padding:8px 16px;color:var(--brand-2);text-decoration:none}
 
     /* Hero */
     .hero{
@@ -106,7 +87,9 @@
     }
 
     /* Uploader card */
-    .uploader{padding:28px 0 36px}
+    .uploader{
+      padding:28px 0 36px
+    }
     .card{
       background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;
       box-shadow:0 8px 24px rgba(0,0,0,.06);
@@ -132,6 +115,7 @@
     }
     input[type="submit"]:hover{filter:brightness(.97)}
     input[type="submit"]:focus{outline:3px solid var(--focus);outline-offset:2px}
+
     .hint{font-size:.9rem;color:var(--muted)}
     .note{font-size:.85rem;color:#374151;background:#f9fafb;border:1px dashed #d1d5db;border-radius:10px;padding:10px;margin-top:10px}
 
@@ -173,10 +157,11 @@
   <!-- Header -->
   <header class="site-header">
     <div class="container">
-      <div class="brand-row" role="banner" aria-label="List Refiner">
+      <div class="brand-row" role="banner" aria-label="List Refiner" style="position: relative;">
+
         <!-- Hamburger menu button -->
-        <button id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--brand-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <button id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu" style="background:none; border:none; cursor:pointer; padding:0; margin-right: 16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--brand-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -185,19 +170,19 @@
 
         <img src="https://pricing.reachengine.io/images/transaction/n-logo.png"
              alt="ReachEngine" class="brand-logo">
-        <div style="display:flex;flex-direction:column;justify-content:center">
+        <div>
           <div class="brand-name">ListRefiner</div>
-          <div class="brand-tag">Clean &amp; combine email lists from Excel in seconds</div>
+          <div class="brand-tag">Clean &amp; combine email lists from Excel  in seconds</div>
         </div>
 
         <!-- Dropdown menu -->
-        <nav id="menu" role="navigation" aria-label="Tool navigation">
-          <ul>
-            <!-- <li><a href="index.html">Home</a></li> -->
-            <li><a href="combiner.html">Excel Combiner &amp; Deduper</a></li>
-            <li><a href="merger.html">Email Sheet Merger</a></li>
-            <li><a href="splitter.html">Industry Splitter</a></li>
-            <li><a href="cleaner.html">Email Cleaner</a></li>
+        <nav id="menu" role="navigation" aria-label="Tool navigation" style="display:none; position: absolute; top: 56px; left: 0; background: white; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 30; min-width: 200px;">
+          <ul style="list-style:none; margin:0; padding: 8px 0;">
+            <li><a href="index.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Home</a></li>
+            <li><a href="combiner.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Excel Combiner & Deduper</a></li>
+            <li><a href="merger.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Email Name Merger</a></li>
+            <li><a href="splitter.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Industry Splitter</a></li>
+            <li><a href="cleaner.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Email Cleaner</a></li>
           </ul>
         </nav>
       </div>
@@ -209,15 +194,10 @@
     <div class="container hero-inner">
       <div>
         <div class="hero-card">
-          <div class="eyebrow">Email List Refiner</div>
-          <h1>Combine all sheets, remove duplicates, and export a clean list</h1>
+          <div class="eyebrow">Excel Combiner & Deduper</div>
+          <h1>Combine multiple sheets and remove duplicates</h1>
           <p class="sub">
-            Upload a single <strong>.xlsx</strong> workbook with multiple sheets. We’ll merge them,
-            dedupe by your email column, and return a refined list you can drop straight into your ESP.
-          </p>
-          <p class="note">
-            Server endpoint is <code>/upload</code>. This page provides the front-end UI; your backend should
-            accept the file, process it, and return a download URL (e.g., a CSV).
+            What it does: Combines multiple sheets in an Excel file and removes duplicate emails.
           </p>
         </div>
       </div>
@@ -231,19 +211,19 @@
   <!-- Features -->
   <section class="features">
     <div class="container">
-      <span class="kicker">Why teams use List Refiner</span>
+      <span class="kicker">Why use Excel Combiner & Deduper</span>
       <div class="feature-grid">
         <div class="feature">
-          <h3>All Sheets, One Click</h3>
-          <p>Automatically combines every sheet in your workbook—no manual copy/paste.</p>
+          <h3>Multi-Sheet Merging</h3>
+          <p>Automatically combines every sheet in your workbook into one unified list.</p>
         </div>
         <div class="feature">
-          <h3>Smart De-dupe</h3>
-          <p>Removes duplicates by email (case-insensitive) and trims whitespace &amp; invalid rows.</p>
+          <h3>Duplicate Removal</h3>
+          <p>Removes duplicates by email (case-insensitive) and trims whitespace.</p>
         </div>
         <div class="feature">
-          <h3>Clean Output</h3>
-          <p>Exports a tidy CSV or XLSX you can import into Mailchimp, HubSpot, Klaviyo, or your ESP.</p>
+          <h3>Clean Export</h3>
+          <p>Exports a tidy CSV or XLSX you can import into your marketing tools.</p>
         </div>
       </div>
     </div>
@@ -257,72 +237,42 @@
         <div class="step">
           <div class="step-num">1</div>
           <h3>Upload your workbook</h3>
-          <p>Select an <strong>.xlsx</strong> file containing any number of sheets.</p>
+          <p>Select an <strong>.xlsx</strong> file containing multiple sheets.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <h3>We combine &amp; clean</h3>
-          <p>All rows are stacked, invalid emails removed, and duplicates are de-duplicated.</p>
+          <h3>We combine & dedupe</h3>
+          <p>All rows are stacked, and duplicates are removed based on email.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <h3>Download refined list</h3>
-          <p>Get a single, ready-to-use list to import into your marketing tools.</p>
+          <p>Get a single, clean list ready for your ESP.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Uploader (optional demo markup so the JS IDs exist)
+  <!-- Uploader -->
   <section class="uploader">
     <div class="container">
       <div class="card">
-        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-          <div class="upload-wrap">
-            <div id="dropzone" class="dropzone">
-              <strong>Drag &amp; drop</strong> your .xlsx here, or choose a file below.
+        <div class="upload-wrap">
+          <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <div class="dropzone" id="dropzone">
+              <span id="dropzoneText">
+                <strong>Drag & drop your .xlsx file here</strong><br>
+                or click to browse
+              </span>
+              <input type="file" id="fileInput" name="file" accept=".xlsx" required style="display:none;">
             </div>
             <div class="input-row">
-              <input id="fileInput" type="file" name="workbook" accept=".xlsx" />
-              <input type="submit" value="Upload &amp; Refine" />
+              <input type="submit" value="Combine & Dedupe">
             </div>
-            <p class="hint">We’ll combine all sheets, dedupe on the email column, and return a clean file.</p>
-          </div>
-        </form>
-        <p class="note">Tip: Keep your email column clearly named (e.g., <em>email</em> or <em>Email</em>).</p>
-      </div>
-    </div>
-  </section> -->
-
-  <!-- Flash Messages (Jinja-friendly, safe to leave in) -->
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <section style="padding: 20px 0; background: #fff3cd; border-bottom: 1px solid #ffeaa7;">
-        <div class="container">
-          {% for message in messages %}
-            <p style="color: #856404; margin: 0; font-weight: 500;">{{ message }}</p>
-          {% endfor %}
+          </form>
         </div>
-      </section>
-    {% endif %}
-  {% endwith %}
-
-  <!-- FAQ -->
-  <section class="faq">
-    <div class="container">
-      <span class="kicker">FAQ</span>
-      <details>
-        <summary>Which column is used for de-duplication?</summary>
-        <p>By default use the column containing emails (case-insensitive, trims whitespace). If multiple email columns exist, pick the first non-empty.</p>
-      </details>
-      <details>
-        <summary>What file types are supported?</summary>
-        <p>Currently <strong>.xlsx</strong>. Convert CSV/Google Sheets to .xlsx before uploading.</p>
-      </details>
-      <details>
-        <summary>Is the upload secure?</summary>
-        <p>Implement HTTPS on your server and delete processed files after generating the refined download.</p>
-      </details>
+        <p class="hint">Supported format: .xlsx (Excel workbook with multiple sheets)</p>
+      </div>
     </div>
   </section>
 
@@ -338,64 +288,68 @@
     </div>
   </footer>
 
-  <!-- Lightweight UX script (optional, no external deps) -->
+  <!-- Lightweight UX script -->
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Hamburger menu toggle
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const menu = document.getElementById('menu');
-
-    hamburgerBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
+    document.getElementById('hamburgerBtn').addEventListener('click', function() {
+      const menu = document.getElementById('menu');
       const expanded = this.getAttribute('aria-expanded') === 'true';
-      this.setAttribute('aria-expanded', String(!expanded));
+      this.setAttribute('aria-expanded', !expanded);
       menu.style.display = expanded ? 'none' : 'block';
     });
 
     // Close menu when clicking outside
     document.addEventListener('click', function(event) {
-      if (!menu.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+      const menu = document.getElementById('menu');
+      const btn = document.getElementById('hamburgerBtn');
+      if (!menu.contains(event.target) && !btn.contains(event.target)) {
         menu.style.display = 'none';
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-expanded', 'false');
       }
     });
 
-    // Drag & drop helper (front-end only)
+    // Drag & drop
     const dz = document.getElementById('dropzone');
     const input = document.getElementById('fileInput');
     const form = document.getElementById('uploadForm');
 
-    if (dz && input && form) {
-      ['dragenter','dragover'].forEach(evt => {
-        dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.add('dragover'); });
-      });
-      ['dragleave','drop'].forEach(evt => {
-        dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('dragover'); });
-      });
-      dz.addEventListener('drop', e => {
-        const file = e.dataTransfer.files && e.dataTransfer.files[0];
-        if (file) {
-          input.files = e.dataTransfer.files;
-          dz.innerHTML = '<strong>Selected:</strong> ' + file.name;
-        }
-      });
+    ['dragenter','dragover'].forEach(evt => {
+      dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(evt => {
+      dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('dragover'); });
+    });
+    dz.addEventListener('drop', e => {
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        document.getElementById('dropzoneText').innerHTML = '<strong>Selected:</strong> ' + file.name;
+      }
+    });
+    dz.addEventListener('click', () => input.click());
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if (file) {
+        document.getElementById('dropzoneText').innerHTML = '<strong>Selected:</strong> ' + file.name;
+      }
+    });
 
-      // Small UX touch: reflect chosen file
-      input.addEventListener('change', () => {
-        const file = input.files && input.files[0];
-        if (file) dz.innerHTML = '<strong>Selected:</strong> ' + file.name;
-      });
+    // Validation
+    form.addEventListener('submit', (e) => {
+      if (!input.files.length || !/\.xlsx$/i.test(input.files[0].name)) {
+        e.preventDefault();
+        alert('Please select a valid .xlsx file.');
+      }
+    });
 
-      // Basic client-side validation (keeps your backend logic unchanged)
-      form.addEventListener('submit', (e) => {
-        if (!input.files.length || !/\.xlsx$/i.test(input.files[0].name)) {
-          e.preventDefault();
-          alert('Please select a valid .xlsx file.');
-        }
-      });
-    }
+    // Submit form on button click (optional, since button is now inside form)
+    // document.querySelector('input[type="submit"]').addEventListener('click', () => {
+    //   form.submit();
+    // });
   </script>
 </body>
-</html>
