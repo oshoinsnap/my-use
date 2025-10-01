@@ -87,9 +87,7 @@
     }
 
     /* Uploader card */
-    .uploader{
-      padding:28px 0 36px
-    }
+    .uploader{padding:28px 0 36px}
     .card{
       background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;
       box-shadow:0 8px 24px rgba(0,0,0,.06);
@@ -105,9 +103,6 @@
     .input-row{
       display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center
     }
-    input[type="file"]{
-      padding:10px;background:#fff;border:1px solid var(--line);border-radius:8px;max-width:360px;width:100%;
-    }
     input[type="submit"]{
       background-color:#B8773A;color:#fff;border:none;padding:12px 18px;border-radius:8px;
       cursor:pointer;font-size:1rem;font-weight:700;letter-spacing:.2px;
@@ -115,23 +110,11 @@
     }
     input[type="submit"]:hover{filter:brightness(.97)}
     input[type="submit"]:focus{outline:3px solid var(--focus);outline-offset:2px}
-
     .hint{font-size:.9rem;color:var(--muted)}
-    .note{font-size:.85rem;color:#374151;background:#f9fafb;border:1px dashed #d1d5db;border-radius:10px;padding:10px;margin-top:10px}
 
-    /* Results (placeholder table styling) */
-    table{border-collapse:collapse;width:100%;margin-top:16px}
-    table,th,td{border:1px solid #e5e7eb}
-    th,td{padding:10px;text-align:left}
-    th{background:#e6f0ff;color:#003366}
-
-    /* FAQ */
-    .faq{padding:10px 0 40px}
-    details{
-      background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:8px 0
-    }
-    summary{cursor:pointer;font-weight:700}
-    summary:focus{outline:3px solid var(--focus);outline-offset:4px}
+    /* File list styling */
+    #fileList{margin-top:10px;font-size:.9rem;color:var(--ink);text-align:left}
+    #fileList li{margin:4px 0;list-style:disc inside}
 
     /* Footer */
     .site-footer{
@@ -157,34 +140,13 @@
   <!-- Header -->
   <header class="site-header">
     <div class="container">
-      <div class="brand-row" role="banner" aria-label="List Refiner" style="position: relative;">
-
-        <!-- Hamburger menu button -->
-        <button id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu" style="background:none; border:none; cursor:pointer; padding:0; margin-right: 16px;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--brand-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-
+      <div class="brand-row">
         <img src="https://pricing.reachengine.io/images/transaction/n-logo.png"
              alt="ReachEngine" class="brand-logo">
         <div>
           <div class="brand-name">ListRefiner</div>
-          <div class="brand-tag">Clean &amp; combine email lists from Excel  in seconds</div>
+          <div class="brand-tag">Clean &amp; combine email lists from Excel in seconds</div>
         </div>
-
-        <!-- Dropdown menu -->
-        <nav id="menu" role="navigation" aria-label="Tool navigation" style="display:none; position: absolute; top: 56px; left: 0; background: white; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 30; min-width: 200px;">
-          <ul style="list-style:none; margin:0; padding: 8px 0;">
-            <li><a href="index.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Home</a></li>
-            <li><a href="combiner.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Excel Combiner & Deduper</a></li>
-            <li><a href="merger.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Email Name Merger</a></li>
-            <li><a href="splitter.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Industry Splitter</a></li>
-            <li><a href="cleaner.html" style="display:block; padding: 8px 16px; color: var(--brand-2); text-decoration:none;">Email Cleaner</a></li>
-          </ul>
-        </nav>
       </div>
     </div>
   </header>
@@ -195,9 +157,9 @@
       <div>
         <div class="hero-card">
           <div class="eyebrow">Excel Combiner & Deduper</div>
-          <h1>Combine multiple sheets and remove duplicates</h1>
+          <h1>Combine multiple Excel files and remove duplicates</h1>
           <p class="sub">
-            What it does: Combines multiple sheets in an Excel file and removes duplicate emails.
+            Upload several Excel workbooks or multi-sheet files — we’ll merge them all and remove duplicate emails.
           </p>
         </div>
       </div>
@@ -214,8 +176,8 @@
       <span class="kicker">Why use Excel Combiner & Deduper</span>
       <div class="feature-grid">
         <div class="feature">
-          <h3>Multi-Sheet Merging</h3>
-          <p>Automatically combines every sheet in your workbook into one unified list.</p>
+          <h3>Multi-File & Multi-Sheet</h3>
+          <p>Upload multiple Excel workbooks and we’ll merge every sheet automatically.</p>
         </div>
         <div class="feature">
           <h3>Duplicate Removal</h3>
@@ -223,7 +185,7 @@
         </div>
         <div class="feature">
           <h3>Clean Export</h3>
-          <p>Exports a tidy CSV or XLSX you can import into your marketing tools.</p>
+          <p>Exports a tidy XLSX you can import into your marketing tools.</p>
         </div>
       </div>
     </div>
@@ -236,8 +198,8 @@
       <div class="step-grid">
         <div class="step">
           <div class="step-num">1</div>
-          <h3>Upload your workbook</h3>
-          <p>Select an <strong>.xlsx</strong> file containing multiple sheets.</p>
+          <h3>Upload your files</h3>
+          <p>Select one or more <strong>.xlsx</strong> files containing multiple sheets.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
@@ -261,17 +223,18 @@
           <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
             <div class="dropzone" id="dropzone">
               <span id="dropzoneText">
-                <strong>Drag & drop your .xlsx file here</strong><br>
+                <strong>Drag & drop your .xlsx files here</strong><br>
                 or click to browse
               </span>
-              <input type="file" id="fileInput" name="file" accept=".xlsx" required style="display:none;">
+              <input type="file" id="fileInput" name="files" accept=".xlsx" multiple required style="display:none;">
             </div>
+            <ul id="fileList"></ul>
             <div class="input-row">
               <input type="submit" value="Combine & Dedupe">
             </div>
           </form>
         </div>
-        <p class="hint">Supported format: .xlsx (Excel workbook with multiple sheets)</p>
+        <p class="hint">Supported format: multiple .xlsx (Excel workbooks with multiple sheets)</p>
       </div>
     </div>
   </section>
@@ -288,33 +251,23 @@
     </div>
   </footer>
 
-  <!-- Lightweight UX script -->
+  <!-- Scripts -->
   <script>
-    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Hamburger menu toggle
-    document.getElementById('hamburgerBtn').addEventListener('click', function() {
-      const menu = document.getElementById('menu');
-      const expanded = this.getAttribute('aria-expanded') === 'true';
-      this.setAttribute('aria-expanded', !expanded);
-      menu.style.display = expanded ? 'none' : 'block';
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('menu');
-      const btn = document.getElementById('hamburgerBtn');
-      if (!menu.contains(event.target) && !btn.contains(event.target)) {
-        menu.style.display = 'none';
-        btn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    // Drag & drop
     const dz = document.getElementById('dropzone');
     const input = document.getElementById('fileInput');
     const form = document.getElementById('uploadForm');
+    const fileList = document.getElementById('fileList');
+
+    function updateFileList(files) {
+      fileList.innerHTML = '';
+      Array.from(files).forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = f.name;
+        fileList.appendChild(li);
+      });
+    }
 
     ['dragenter','dragover'].forEach(evt => {
       dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.add('dragover'); });
@@ -322,34 +275,36 @@
     ['dragleave','drop'].forEach(evt => {
       dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('dragover'); });
     });
+
     dz.addEventListener('drop', e => {
-      const file = e.dataTransfer.files && e.dataTransfer.files[0];
-      if (file) {
+      const files = e.dataTransfer.files;
+      if (files.length) {
         const dt = new DataTransfer();
-        dt.items.add(file);
+        for (let i=0; i<files.length; i++) dt.items.add(files[i]);
         input.files = dt.files;
-        document.getElementById('dropzoneText').innerHTML = '<strong>Selected:</strong> ' + file.name;
+        updateFileList(files);
       }
     });
+
     dz.addEventListener('click', () => input.click());
     input.addEventListener('change', () => {
-      const file = input.files && input.files[0];
-      if (file) {
-        document.getElementById('dropzoneText').innerHTML = '<strong>Selected:</strong> ' + file.name;
-      }
+      if (input.files.length) updateFileList(input.files);
     });
 
-    // Validation
     form.addEventListener('submit', (e) => {
-      if (!input.files.length || !/\.xlsx$/i.test(input.files[0].name)) {
+      if (!input.files.length) {
         e.preventDefault();
-        alert('Please select a valid .xlsx file.');
+        alert('Please select at least one .xlsx file.');
+        return;
+      }
+      for (let f of input.files) {
+        if (!/\.xlsx$/i.test(f.name)) {
+          e.preventDefault();
+          alert('Only .xlsx files are supported.');
+          return;
+        }
       }
     });
-
-    // Submit form on button click (optional, since button is now inside form)
-    // document.querySelector('input[type="submit"]').addEventListener('click', () => {
-    //   form.submit();
-    // });
   </script>
 </body>
+</html>
