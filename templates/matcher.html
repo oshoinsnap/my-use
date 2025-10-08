@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Excel & CSV Combiner & Deduper - List Refiner</title>
+  <title>Email Matcher - List Refiner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -195,10 +195,10 @@
     <div class="container hero-inner">
       <div>
         <div class="hero-card">
-          <div class="eyebrow">Excel & CSV Combiner & Deduper</div>
-          <h1>Combine multiple Excel and CSV files and remove duplicates</h1>
+          <div class="eyebrow">Email Matcher</div>
+          <h1>Match emails between source and target files</h1>
           <p class="sub">
-            What it does: Combines multiple Excel and CSV files and removes duplicate emails.
+            Upload a source file and multiple target files. We'll add columns to the source indicating if each email appears in each target.
           </p>
         </div>
       </div>
@@ -212,19 +212,19 @@
   <!-- Features -->
   <section class="features">
     <div class="container">
-      <span class="kicker">Why use Excel & CSV Combiner & Deduper</span>
+      <span class="kicker">Why use Email Matcher</span>
       <div class="feature-grid">
         <div class="feature">
-          <h3>Multi-File Merging</h3>
-          <p>Automatically combines every file into one unified list.</p>
+          <h3>Source Enrichment</h3>
+          <p>Adds columns to your source file showing presence in target lists.</p>
         </div>
         <div class="feature">
-          <h3>Duplicate Removal</h3>
-          <p>Removes duplicates by email (case-insensitive) and trims whitespace.</p>
+          <h3>Multiple Targets</h3>
+          <p>Compare against multiple target files simultaneously.</p>
         </div>
         <div class="feature">
-          <h3>Clean Export</h3>
-          <p>Exports a tidy CSV or XLSX you can import into your marketing tools.</p>
+          <h3>Easy Export</h3>
+          <p>Download the enriched source file as Excel.</p>
         </div>
       </div>
     </div>
@@ -237,18 +237,18 @@
       <div class="step-grid">
         <div class="step">
           <div class="step-num">1</div>
-          <h3>Upload your Excel and CSV files</h3>
-          <p>Select multiple <strong>.xlsx or .csv</strong> files to combine.</p>
+          <h3>Upload source and targets</h3>
+          <p>Select one source file and multiple target files (.xlsx or .csv).</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <h3>We combine & dedupe</h3>
-          <p>All rows from all files are stacked, and duplicates are removed based on email.</p>
+          <h3>We match emails</h3>
+          <p>For each target, add a 'yes/no' column to the source based on email matches.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <h3>Download refined list</h3>
-          <p>Get a single, clean list ready for your ESP.</p>
+          <h3>Download enriched source</h3>
+          <p>Get your source file with added match columns.</p>
         </div>
       </div>
     </div>
@@ -259,20 +259,21 @@
     <div class="container">
       <div class="card">
         <div class="upload-wrap">
-          <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-            <div class="dropzone" id="dropzone">
-              <span id="dropzoneText">
-                <strong>Drag & drop your .xlsx or .csv files here</strong><br>
-                or click to browse
-              </span>
-              <input type="file" id="fileInput" name="file" accept=".xlsx,.csv" multiple required style="display:none;">
+          <form id="uploadForm" action="/match_emails" method="post" enctype="multipart/form-data">
+            <div class="input-row">
+              <label for="source">Source File:</label>
+              <input type="file" id="source" name="source" accept=".xlsx,.csv" required>
             </div>
             <div class="input-row">
-              <input type="submit" value="Combine & Dedupe">
+              <label for="target">Target Files:</label>
+              <input type="file" id="target" name="target" accept=".xlsx,.csv" multiple required>
+            </div>
+            <div class="input-row">
+              <input type="submit" value="Match Emails">
             </div>
           </form>
         </div>
-        <p class="hint">Supported format: .xlsx and .csv (multiple files)</p>
+        <p class="hint">Source: single .xlsx or .csv file. Targets: multiple .xlsx or .csv files.</p>
       </div>
     </div>
   </section>
@@ -311,58 +312,6 @@
         btn.setAttribute('aria-expanded', 'false');
       }
     });
-
-    // Drag & drop
-    const dz = document.getElementById('dropzone');
-    const input = document.getElementById('fileInput');
-    const form = document.getElementById('uploadForm');
-
-    ['dragenter','dragover'].forEach(evt => {
-      dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.add('dragover'); });
-    });
-    ['dragleave','drop'].forEach(evt => {
-      dz.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('dragover'); });
-    });
-    dz.addEventListener('drop', e => {
-      const files = e.dataTransfer.files;
-      if (files && files.length > 0) {
-        const dt = new DataTransfer();
-        for (let file of files) {
-          dt.items.add(file);
-        }
-        input.files = dt.files;
-        const fileNames = Array.from(files).map(f => f.name).join(', ');
-        document.getElementById('dropzoneText').innerHTML = '<strong>Selected:</strong> ' + fileNames;
-      }
-    });
-    dz.addEventListener('click', () => input.click());
-    input.addEventListener('change', () => {
-      const files = input.files;
-      if (files && files.length > 0) {
-        const fileNames = Array.from(files).map(f => f.name).join(', ');
-        document.getElementById('dropzoneText').innerHTML = '<strong>Selected:</strong> ' + fileNames;
-      }
-    });
-
-    // Validation
-    form.addEventListener('submit', (e) => {
-      if (!input.files.length) {
-        e.preventDefault();
-        alert('Please select at least one file.');
-        return;
-      }
-      for (let file of input.files) {
-        if (!/\.xlsx$|\.csv$/i.test(file.name)) {
-          e.preventDefault();
-          alert('All files must be .xlsx or .csv format.');
-          return;
-        }
-      }
-    });
-
-    // Submit form on button click (optional, since button is now inside form)
-    // document.querySelector('input[type="submit"]').addEventListener('click', () => {
-    //   form.submit();
-    // });
   </script>
 </body>
+</html>
