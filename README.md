@@ -26,6 +26,20 @@ A comprehensive Flask web application that provides multiple email processing to
    - Filters out disposable and role-based email addresses
    - Optional DNS validation for thorough cleaning
 
+5. **Data Analysis Dashboard**
+   - Analyze email data with statistics and visualizations
+   - Domain distribution charts
+   - Duplicate analysis and data quality metrics
+   - Powered by pandas, matplotlib, and seaborn
+
+6. **Email Verifier**
+   - Bulk authenticate email domains using SPF, DKIM, and DMARC protocols
+   - Verify the legitimacy of your email lists with comprehensive security checks
+   - Check sender policy framework (SPF) records
+   - Validate domain keys identified mail (DKIM) signatures
+   - Verify domain-based message authentication (DMARC) policies
+   - Get authentication scores for each email domain
+
 ## Local Development
 
 ### Prerequisites
@@ -88,17 +102,51 @@ The application is configured for Vercel with:
 ## File Structure
 
 ```
-email-tools/         # Vercel serverless entry point
+email-tools/
+├── api/
+│   └── index.py          # Vercel serverless entry point
 ├── templates/
-│   └── index.html (rest all)       # Main web interface
+│   ├── index.html        # Main web interface
+│   ├── verifier.html     # Email verifier UI
+│   └── analysis.html     # Data analysis dashboard
 ├── app.py                # Flask application
 ├── vercel.json          # Vercel deployment configuration
 ├── requirements.txt     # Python dependencies
 ├── email_name_merger.py # Name merging tool
 ├── seprate.py          # Industry splitter tool
 ├── cleaner.py          # Email cleaning tool
+├── email_auth.py       # Email authentication module
+├── data_analysis.py    # Data analysis functions
+├── ml_models.py        # Machine learning models
 └── README.md           # This file
 ```
+
+## Data Science & Machine Learning Libraries
+
+This project includes a comprehensive set of Python libraries for data manipulation, analysis, visualization, and machine learning, enabling advanced processing and insights from email data:
+
+### 1. Data Manipulation & Analysis
+- **Pandas** → For data cleaning, exploration, and manipulation (reading CSVs, filtering data, grouping, merging tables)
+- **NumPy** → For numerical computation and arrays (fast matrix operations and statistics)
+
+### 2. Data Visualization
+- **Matplotlib** → Basic plotting (line, bar, scatter, histograms)
+- **Seaborn** → High-level statistical plots (heatmaps, pairplots, etc.)
+- **Plotly** → Interactive dashboards and web-based visuals
+
+### 3. Machine Learning
+- **Scikit-learn (sklearn)** → Regression, classification, clustering, model evaluation
+- **XGBoost / LightGBM / CatBoost** → Advanced boosting models
+- **TensorFlow / PyTorch** → Deep learning frameworks
+
+### 4. Data Preprocessing & Automation
+- **Regex (re)** → Cleaning messy text data
+- **datetime** → Handling date/time data
+- **os / glob** → File automation (reading multiple files)
+
+### 5. Statistics & Math
+- **SciPy** → Statistical tests and distributions
+- **Statsmodels** → Regression analysis, ANOVA, time series models
 
 ## Usage
 
@@ -128,4 +176,3 @@ For large files or heavy processing, consider running locally or using a VPS dep
 ## License
 
 This project is open source. Please check the license file for details.
-

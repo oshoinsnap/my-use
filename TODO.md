@@ -1,6 +1,14 @@
-- [x] Modify templates/index.html: Remove the "Tools Section", add hamburger menu CSS, HTML, and JS to the header for navigation to tool pages.
-- [x] Create templates/combiner.html: Copy layout from index.html, adapt hero, features, steps, and uploader for Excel Combiner & Deduper tool.
-- [x] Create templates/merger.html: Copy layout from index.html, adapt hero, features, steps, and uploader for Email Name Merger tool.
-- [x] Create templates/splitter.html: Copy layout from index.html, adapt hero, features, steps, and uploader for Industry Splitter tool.
-- [x] Create templates/cleaner.html: Copy layout from index.html, adapt hero, features, steps, and uploader for Email Cleaner tool.
-- [x] Test the hamburger menu navigation and ensure layouts are consistent across pages.
+# Email Verifier Updates TODO
+
+## Tasks
+- [x] Update CSS in verifier.html to match other pages' styling
+- [x] Modify app.py verify_emails function for batch processing and progress tracking
+- [x] Add JavaScript to verifier.html for real-time progress updates
+- [x] Update results display to show dynamic progress messages
+- [x] Add logs display in verifier.html for verification process
+- [x] Update app.py to include logs in verification_status response
+- [x] Test dynamic progress functionality
+- [x] Verify CSS consistency across pages
+
+## Progress
+- Completed: All major features implemented including progress tracking, logs display, and CSS consistency
