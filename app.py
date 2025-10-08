@@ -124,7 +124,7 @@ def login():
             session['logged_in'] = True
             return redirect(url_for('index'))
         else:
-            flash('Access denied. Only @reachengine.io emails or osho allowed.')
+            flash('Access denied.')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -675,3 +675,4 @@ def get_verification_status():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
